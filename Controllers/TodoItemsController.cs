@@ -23,14 +23,20 @@ namespace Aspnetserver2.Controllers
             string query = @"
                             SELECT * FROM dbo.TodoItem
                            ";
+
             DataTable table = new DataTable();
+            // appsettings.jsonの接続文字列を取得
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
             SqlDataReader myReader;
-            using(SqlConnection myConn = new SqlConnection(sqlDataSource))
+            // 接続のためのオブジェクトを生成
+            using (SqlConnection myConn = new SqlConnection(sqlDataSource))
             {
+                // 接続開始
                 myConn.Open();
-                using(SqlCommand myCommand = new SqlCommand(query, myConn))
+                // SqlCommand：DBにSQL文を送信するためのオブジェクトを生成
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
                 {
+                    // SqlDataReader：読み取ったデータを格納するためのオブジェクトを生成
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -43,17 +49,19 @@ namespace Aspnetserver2.Controllers
         [HttpGet("{id}")]
         public JsonResult Get(long id)
         {
+            // パラメーターで中身を指定したレコードを追加
             string query = @"
                             SELECT TOP 1 * FROM dbo.TodoItem
                             WHERE TodoItemId = @Id
                            ";
-            DataTable table = new DataTable();
+            DataTable table = new();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
             SqlDataReader myReader;
             using (SqlConnection myConn = new(sqlDataSource))
             {
                 myConn.Open();
                 using SqlCommand myCommand = new(query, myConn);
+                // パラメーターの追加
                 myCommand.Parameters.AddWithValue("@Id", id);
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
