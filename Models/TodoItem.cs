@@ -14,5 +14,9 @@ namespace Aspnetserver2.Models
 
         [DataType(DataType.Date)]
         public DateTime Modified { get; set; }
+        public int ColorId { get; set; }
+        public int CategoryId { get; set; }
+        public int UserId { get; set; }
+        public int StateId { get; set; }
     }
 }

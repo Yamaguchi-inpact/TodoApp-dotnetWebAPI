@@ -8,11 +8,11 @@ namespace Aspnetserver2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController : ControllerBase
+    public class CategoryController : ControllerBase
     {
 
         public readonly IConfiguration _configuration;
-        public TodoItemsController(IConfiguration configuration)
+        public CategoryController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -21,7 +21,7 @@ namespace Aspnetserver2.Controllers
         public JsonResult Get()
         {
             string query = @"
-                            SELECT * FROM dbo.TodoItem
+                            SELECT * FROM dbo.TodoCategory
                            ";
 
             DataTable table = new DataTable();
@@ -51,8 +51,8 @@ namespace Aspnetserver2.Controllers
         {
             // パラメーターで中身を指定したレコードを追加
             string query = @"
-                            SELECT TOP 1 * FROM dbo.TodoItem
-                            WHERE TodoItemId = @Id
+                            SELECT TOP 1 * FROM dbo.TodoCategory
+                            WHERE CategoryId = @Id
                            ";
             DataTable table = new();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
@@ -72,11 +72,11 @@ namespace Aspnetserver2.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(TodoItem todo)
+        public JsonResult Post(Category category)
         {
             string query = @"
-                            INSERT INTO dbo.TodoItem 
-                            VALUES (@Title, @Text, 'false', getdate(), getdate(), 0, 0 ,0, 0)
+                            INSERT INTO dbo.TodoCategory 
+                            VALUES (@Category,@Color, @State, getdate(), getdate(), 0)
                            ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
@@ -86,8 +86,9 @@ namespace Aspnetserver2.Controllers
                 myConn.Open();
                 using (SqlCommand myCommand = new(query, myConn))
                 {
-                    myCommand.Parameters.AddWithValue("@Title", todo.TodoTitle);
-                    myCommand.Parameters.AddWithValue("@Text", todo.TodoText);
+                    myCommand.Parameters.AddWithValue("@Category", category.CategoryName);
+                    myCommand.Parameters.AddWithValue("@Color", category.ColorId);
+                    myCommand.Parameters.AddWithValue("@State", category.StateId);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -99,15 +100,15 @@ namespace Aspnetserver2.Controllers
         }
 
         [HttpPut("{id}")]
-        public JsonResult Put(long id, TodoItem todo)
+        public JsonResult Put(long id, Category category)
         {
             string query = @"
-                            UPDATE dbo.TodoItem 
-                            SET TodoTitle = @Title,
-                            TodoText = @Text,
-                            IsComplete = @IsComplete,
+                            UPDATE dbo.TodoCategory
+                            SET CategoryName = @Name,
+                            StateId = @State,
+                            ColorId = @Color,
                             Modified = getdate() 
-                            WHERE TodoItemId = @Id
+                            WHERE CategoryId = @Id
                            ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
@@ -117,9 +118,9 @@ namespace Aspnetserver2.Controllers
                 myConn.Open();
                 using (SqlCommand myCommand = new(query, myConn))
                 {
-                    myCommand.Parameters.AddWithValue("@Title", todo.TodoTitle);
-                    myCommand.Parameters.AddWithValue("@Text", todo.TodoText);
-                    myCommand.Parameters.AddWithValue("@IsComplete", todo.IsComplete);
+                    myCommand.Parameters.AddWithValue("@Name", category.CategoryName);
+                    myCommand.Parameters.AddWithValue("@State", category.StateId);
+                    myCommand.Parameters.AddWithValue("@Color", category.ColorId);
                     myCommand.Parameters.AddWithValue("@Id", id);
 
                     myReader = myCommand.ExecuteReader();
@@ -135,8 +136,8 @@ namespace Aspnetserver2.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                            DELETE FROM dbo.TodoItem 
-                            WHERE TodoItemId = @Id
+                            DELETE FROM dbo.TodoCategory
+                            WHERE CategoryId = @Id
                            ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");

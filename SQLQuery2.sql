@@ -5,9 +5,20 @@
 --IsComplete bit,
 --Created datetime2,
 --Modified datetime2
---)
+--);
 
---insert into dbo.TodoItem values ('title','text','false',getdate(),getdate())
---insert into dbo.TodoItem values ('title2','text2','false',getdate(),getdate())
+--ALTER TABLE dbo.TodoItem ADD
+--	[CategoryId] int,
+--	[ColorId] int,
+--	[UserId] int,
+	--[StateId] int;
 
-select * from dbo.TodoItem
+--insert into dbo.TodoItem values ('test','text','false',getdate(),getdate(), 0, 0 ,0, 0);
+
+ --UPDATE TodoItem SET
+	--ColorId = 0,
+	--CategoryId = 0,
+	--UserId = 0,
+	--StateId = 0;
+
+select * from dbo.TodoItem;
