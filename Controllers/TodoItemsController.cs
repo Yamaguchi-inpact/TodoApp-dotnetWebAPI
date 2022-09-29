@@ -22,6 +22,7 @@ namespace Aspnetserver2.Controllers
         {
             string query = @"
                             SELECT * FROM dbo.TodoItem
+                            ORDER BY TodoItemId
                            ";
 
             DataTable table = new DataTable();

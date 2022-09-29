@@ -21,4 +21,5 @@
 	--UserId = 0,
 	--StateId = 0;
 
-select * from dbo.TodoItem;
+select * from dbo.TodoItem
+ORDER BY TodoItemId;
