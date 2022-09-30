@@ -46,7 +46,7 @@ namespace Aspnetserver2.Controllers
             }
             return new JsonResult(table);
         }
-
+        
         [HttpGet("{id}")]
         public JsonResult Get(long id)
         {
@@ -77,7 +77,7 @@ namespace Aspnetserver2.Controllers
         {
             string query = @"
                             INSERT INTO dbo.TodoItem 
-                            VALUES (@Title, @Text, 'false', getdate(), getdate(), 0, 0 ,0, 0)
+                            VALUES (@Title, @Text, 'false', getdate(), getdate(), 0, @Category, 0, 0)
                            ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("TodoAppCon");
@@ -89,6 +89,7 @@ namespace Aspnetserver2.Controllers
                 {
                     myCommand.Parameters.AddWithValue("@Title", todo.TodoTitle);
                     myCommand.Parameters.AddWithValue("@Text", todo.TodoText);
+                    myCommand.Parameters.AddWithValue("@Category", todo.CategoryId);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -107,6 +108,7 @@ namespace Aspnetserver2.Controllers
                             SET TodoTitle = @Title,
                             TodoText = @Text,
                             IsComplete = @IsComplete,
+                            CategoryId = @Category,
                             Modified = getdate() 
                             WHERE TodoItemId = @Id
                            ";
@@ -121,6 +123,7 @@ namespace Aspnetserver2.Controllers
                     myCommand.Parameters.AddWithValue("@Title", todo.TodoTitle);
                     myCommand.Parameters.AddWithValue("@Text", todo.TodoText);
                     myCommand.Parameters.AddWithValue("@IsComplete", todo.IsComplete);
+                    myCommand.Parameters.AddWithValue("@Category", todo.CategoryId);
                     myCommand.Parameters.AddWithValue("@Id", id);
 
                     myReader = myCommand.ExecuteReader();
